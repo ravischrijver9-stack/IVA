@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IVAR — Jouw AI Chatbot</title>
+  <title>IVA — Jouw AI Chatbot</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -15,10 +15,10 @@
 </head>
 <body class="p-6">
   <div class="max-w-xl mx-auto bg-white p-6 rounded shadow flex flex-col space-y-4">
-    <h1 class="text-2xl font-bold text-center text-indigo-700">IVAR — Jouw AI Chatbot</h1>
+    <h1 class="text-2xl font-bold text-center text-indigo-700">IVA — Jouw AI Chatbot</h1>
 
     <div id="auth-section" class="text-center">
-      <p class="mb-2">Log in om IVAR te gebruiken:</p>
+      <p class="mb-2">Log in om IVA te gebruiken:</p>
       <button id="login-btn" class="bg-indigo-600 text-white px-4 py-2 rounded">🔐 Log in met Google</button>
     </div>
 
@@ -33,14 +33,14 @@
   </div>
 
   <script>
-    // ✅ Firebase-config (gecorrigeerd)
+    // ✅ Firebase-config voor IVA
     const firebaseConfig = {
       apiKey: "AIzaSyAebutJDPHTFPhGbUOb__ZuRWXJFNrIupE",
       authDomain: "ivar-4be46.firebaseapp.com",
       projectId: "ivar-4be46",
       storageBucket: "ivar-4be46.appspot.com",
       messagingSenderId: "887327729474",
-      appId: "1:887327729474:web:e27c5d55d73c6301070adb"
+      appId: "1:887327729474:web:3658723ea0271a78070adb"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -74,7 +74,7 @@
       }
     });
 
-    // 🤖 IVAR AI via Gemini
+    // 🤖 IVA via Gemini API
     const API_KEY = "AIzaSyDYCpPo7jRa8vJDbH3P5R1eopFo5koGPAo";
     const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
 
@@ -82,7 +82,7 @@
     const input = document.getElementById("input");
     const send = document.getElementById("send");
 
-    let ivarMemory = [];
+    let ivaMemory = [];
 
     function addMessage(text, sender) {
       const bubble = document.createElement("div");
@@ -92,11 +92,11 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
-    async function fetchIVARReply(message) {
-      ivarMemory.push(message);
-      const context = ivarMemory.slice(0, -1).join(" | ");
+    async function fetchIVAReply(message) {
+      ivaMemory.push(message);
+      const context = ivaMemory.slice(0, -1).join(" | ");
       const prompt = `
-Je bent IVAR, een slimme AI-chatbot die met ${auth.currentUser?.displayName || "de gebruiker"} praat.
+Je bent IVA, een slimme AI-chatbot die met ${auth.currentUser?.displayName || "de gebruiker"} praat.
 Je onthoudt wat hij eerder heeft gezegd: ${context}.
 Reageer vriendelijk, slim en creatief. Gebruik hedendaags Nederlands. Geef altijd een inhoudelijk en persoonlijk antwoord.
 Vraag door als iets onduidelijk is.
@@ -111,7 +111,7 @@ Gebruiker zegt: "${message}"
         })
       });
       const result = await response.json();
-      return result.candidates?.[0]?.content?.parts?.[0]?.text || "IVAR heeft even geen antwoord.";
+      return result.candidates?.[0]?.content?.parts?.[0]?.text || "IVA heeft even geen antwoord.";
     }
 
     send.addEventListener("click", async () => {
@@ -119,7 +119,7 @@ Gebruiker zegt: "${message}"
       if (!text) return;
       addMessage(text, "user");
       input.value = "";
-      const reply = await fetchIVARReply(text);
+      const reply = await fetchIVAReply(text);
       addMessage(reply, "bot");
     });
 

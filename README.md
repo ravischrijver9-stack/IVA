@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
@@ -31,6 +30,7 @@
     <div class="sidebar">
       <button id="new-chat">➕ Nieuwe chat</button>
       <ul id="chat-list" class="chat-list"></ul>
+      <button id="export-chat" class="logout">📤 Exporteer chat</button>
       <button id="logout-btn" class="logout">Uitloggen</button>
     </div>
     <div class="chat-area">
@@ -75,6 +75,7 @@
     const chatSection = document.getElementById("chat-section");
     const chatList = document.getElementById("chat-list");
     const newChatBtn = document.getElementById("new-chat");
+    const exportBtn = document.getElementById("export-chat");
 
     let currentChatId = null;
     let chats = {};
@@ -116,6 +117,25 @@
       switchChat("chat-1");
     }
 
+    newChatBtn.addEventListener("click", () => {
+      const id = "chat-" + (Object.keys(chats).length + 1);
+      chats[id] = { name: "Chat " + (Object.keys(chats).length + 1), messages: [] };
+      const li = document.createElement("li");
+      li.textContent = chats[id].name;
+      li.onclick = () => switchChat(id);
+      chatList.appendChild(li);
+      switchChat(id);
+    });
+
+    exportBtn.addEventListener("click", () => {
+      const text = ivaMemory.map(m => `${m.sender.toUpperCase()}: ${m.text}`).join("\n");
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = chats[currentChatId].name + ".txt";
+      link.click();
+    });
+
     function switchChat(id) {
       currentChatId = id;
       ivaMemory = chats[id].messages;
@@ -144,28 +164,4 @@
       addMessage(text, "user");
       input.value = "";
       const reply = await fetchIVAReply(text);
-      addMessage(reply, "bot");
-    });
-
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") send.click();
-    });
-
-    function addMessage(text, sender) {
-      ivaMemory.push({ text, sender });
-      chats[currentChatId].messages = ivaMemory;
-      renderChat();
-    }
-
-    async function fetchIVAReply(message) {
-      const context = ivaMemory.map(m => `${m.sender}: ${m.text}`).join(" | ");
-      const selectedTone = tone.value;
-      const prompt = `
-Je bent IVA, een slimme AI-chatbot met toon "${selectedTone}".
-Je praat met ${auth.currentUser?.displayName || "de gebruiker"}.
-Context: ${context}
-Gebruiker zegt: "${message}"
-Reageer in het Nederlands, met de gekozen toon.
-      `.trim();
-
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=AIzaSyDYCpPo7jRa8vJDbH3P5R1eopFo5koGPAo", {
+      addMessage(reply,

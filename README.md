@@ -165,3 +165,8 @@
       input.value = "";
       const reply = await fetchIVAReply(text);
       addMessage(reply,
+                 });
+</script>
+</body>
+</html>
+

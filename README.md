@@ -164,9 +164,12 @@
       addMessage(text, "user");
       input.value = "";
       const reply = await fetchIVAReply(text);
-      addMessage(reply,
-                 });
-</script>
-</body>
-</html>
+      addMessage(reply, "bot");
+    });
 
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") send.click();
+    });
+
+    function addMessage(text, sender) {
+      ivaMemory.push({ text, sender

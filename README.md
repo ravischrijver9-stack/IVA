@@ -7,60 +7,19 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #f0f2f5;
-      display: flex;
-      height: 100vh;
-    }
-    #sidebar {
-      width: 250px;
-      background: #1e1e2f;
-      color: white;
-      padding: 1rem;
-      overflow-y: auto;
-    }
-    #main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    #chat {
-      flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      background: white;
-    }
-    .bubble {
-      margin: 0.5rem 0;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      max-width: 70%;
-    }
+    body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
+    #sidebar { width: 250px; background: #1e1e2f; color: white; padding: 1rem; overflow-y: auto; }
+    #main { flex: 1; display: flex; flex-direction: column; }
+    #chat { flex: 1; padding: 1rem; overflow-y: auto; background: #f4f7f9; }
+    .bubble { margin: 0.5rem 0; padding: 0.75rem; border-radius: 0.5rem; max-width: 70%; }
     .user { background: #4f46e5; color: white; margin-left: auto; text-align: right; }
     .bot { background: #eee; color: #111; margin-right: auto; }
     img.generated { max-width: 100%; margin-top: 1rem; border-radius: 0.5rem; }
-    #controls {
-      display: flex;
-      gap: 0.5rem;
-      padding: 1rem;
-      background: #f9f9f9;
-      border-top: 1px solid #ccc;
-    }
-    input, select, button {
-      font-size: 1rem;
-      padding: 0.5rem;
-    }
+    #controls { display: flex; gap: 0.5rem; padding: 1rem; background: #fff; border-top: 1px solid #ccc; }
+    input, select, button { font-size: 1rem; padding: 0.5rem; }
     input { flex: 1; }
-    .chat-title {
-      cursor: pointer;
-      padding: 0.5rem;
-      border-bottom: 1px solid #333;
-    }
-    .chat-title:hover {
-      background: #2e2e3f;
-    }
+    .chat-title { cursor: pointer; padding: 0.5rem; border-bottom: 1px solid #333; }
+    .chat-title:hover { background: #2e2e3f; }
   </style>
 </head>
 <body>
@@ -159,7 +118,7 @@
 
     document.getElementById("send").onclick = async () => {
       const text = document.getElementById("input").value.trim();
-      if (!text) return;
+      if (!text || !chatRef) return;
       addMessage(text, "user");
       saveMessage(text, "user");
       document.getElementById("input").value = "";
@@ -201,10 +160,4 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: `Genereer een afbeelding van: ${promptText}` }] }]
-        })
-      });
-      const data = await res.json();
-      const imagePart = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData?.mimeType?.includes("image"));
-      if (imagePart) {
-        return "data:" + imagePart.inlineData.mime
+          contents: [{ role: "user", parts
